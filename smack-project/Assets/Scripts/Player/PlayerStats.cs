@@ -34,6 +34,7 @@ namespace Player {
         }
 
         public int MaxHP, CurrHP, MaxMP, CurrMP, MaxSP, CurrSP;
-        public List<EquipmentStats> equipmentStats;
+        public List<EquipmentStats> EquipmentStats;
+        public Dictionary<StatNames, int> StatCache;
     }
 }
