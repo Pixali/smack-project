@@ -34,6 +34,7 @@ namespace Player {
         }
 
         public int MaxHP, CurrHP, MaxMP, CurrMP, MaxSP, CurrSP;
+        public float Speed;
         public List<EquipmentStats> equipmentStats;
     }
 }
