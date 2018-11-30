@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-namespace Player {
+using StatMod = Player.StatDictionary.StatMod;
+using StatCost = Player.StatDictionary.StatCost;
+namespace Player
+{
     public class PlayerStats
     {
 
@@ -13,21 +17,16 @@ namespace Player {
         // then every level after takes 50% more xp than the last
 
         public int XP;
-        public int Level
-        {
-            get
-            {
+        public int Level {
+            get {
                 return Mathf.FloorToInt(-Mathf.Log((40 / (3 * (this.XP + 20))) / (Mathf.Log(3) - Mathf.Log(2))));
             }
-            set
-            {
+            set {
                 this.XP = Mathf.FloorToInt(5 * Mathf.Pow(2, (3 - value)) * Mathf.Pow(3, (value - 1)) - 20);
             }
         }
-        public int XPtoNext
-        {
-            get
-            {
+        public int XPtoNext {
+            get {
                 int lv = this.Level + 1;
                 return Mathf.FloorToInt(5 * Mathf.Pow(2, (3 - lv)) * Mathf.Pow(3, (lv - 1)) - 20) - this.XP;
             }
@@ -35,8 +34,15 @@ namespace Player {
 
         public int MaxHP, CurrHP, MaxMP, CurrMP, MaxSP, CurrSP;
 
+        public StatBundle BasicStats;
+
         public float Speed;
-        public List<EquipmentStats> equipmentStats;
+        public List<StatBundle> statBundles; // skills, equipment, etc.
         public Dictionary<StatNames, int> StatCache;
+
+        // todo: load defaults from file
+        public PlayerStats() {
+            BasicStats = new StatBundle();
+        }
     }
 }

@@ -23,8 +23,7 @@ public class Projectile : MonoBehaviour {
         rb.transform.position += rb.transform.up * Time.deltaTime * speed;
 	}
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
+    private void OnCollisionEnter2D(Collision2D other) {
         Destroy(gameObject);
     }
 }

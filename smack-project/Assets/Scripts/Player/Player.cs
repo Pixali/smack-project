@@ -8,27 +8,22 @@ namespace Player {
     public class Player : NetworkBehaviour
     {
         // stats
-
         private PlayerStats playerStats;
 
         // physics, etc
         private Rigidbody2D rb;
         private GameController gameController;
 
-
         // ui
-
         private Text hpText;
         private Text manaText;
 
         // set sprite to red for "our" player
-        public override void OnStartLocalPlayer()
-        {
+        public override void OnStartLocalPlayer() {
             GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Player/myplayer");
         }
 
-        public void useMana(int amount)
-        {
+        public void useMana(int amount) {
             playerStats.CurrMP -= amount;
             if (playerStats.CurrMP <= 0)
             {
@@ -38,8 +33,7 @@ namespace Player {
             manaText.text = "mana: " + playerStats.CurrMP + "/" + playerStats.MaxMP;
         }
 
-        public void takeDmg(int dmg)
-        {
+        public void takeDmg(int dmg) {
             playerStats.CurrHP -= dmg;
             if (playerStats.CurrHP <= 0)
             {
@@ -51,17 +45,14 @@ namespace Player {
         }
 
         private void shoot() {
-            if (playerStats.CurrMP >= 10)
-            {
+            if (playerStats.CurrMP >= 10) {
                 useMana(10);
                 Instantiate(Resources.Load<GameObject>("Prefabs/Projectiles/projectile"), transform.position, transform.rotation);
             }
         }
 
         // Use this for initialization
-        void Start()
-        {
-
+        void Start() {
             gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
             rb = GetComponent<Rigidbody2D>();
 
@@ -83,11 +74,8 @@ namespace Player {
 
         }
 
-        void FixedUpdate()
-        {
-
-            if (!gameController.paused)
-            {
+        void FixedUpdate() {
+            if (!gameController.paused) {
                 rb.transform.rotation = Quaternion.LookRotation(Vector3.forward, Camera.main.ScreenToWorldPoint(Input.mousePosition) - rb.transform.position);
 
                 if (Input.GetKeyDown("space")) {
@@ -102,11 +90,8 @@ namespace Player {
 
         }
 
-        void OnTriggerEnter2D(Collider2D other)
-        {
-
-            if (!gameController.paused)
-            {
+        void OnTriggerEnter2D(Collider2D other) {
+            if (!gameController.paused) {
                 Debug.Log("collided with " + other.gameObject);
             }
         }

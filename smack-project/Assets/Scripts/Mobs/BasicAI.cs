@@ -26,18 +26,15 @@ public class BasicAI : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        if (!inrange)
-        {
+        if (!inrange) {
             // search for closest player to fight with
             GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
             GameObject closest = null;
             float distance = Mathf.Infinity;
 
-            foreach (GameObject gameObject in gameObjects)
-            {
+            foreach (GameObject gameObject in gameObjects) {
                 float currDistance = (gameObject.transform.position - transform.position).sqrMagnitude;
-                if (currDistance < distance)
-                {
+                if (currDistance < distance) {
                     closest = gameObject;
                     distance = currDistance;
                     transform.rotation = Quaternion.LookRotation(Vector3.forward, closest.transform.position - transform.position);
@@ -48,8 +45,7 @@ public class BasicAI : MonoBehaviour {
     }
 
     IEnumerator attack(GameObject target) {
-        while (inrange)
-        {
+        while (inrange) {
             Debug.Log("Attacking...");
             target.GetComponent<Player.Player>().takeDmg(dmg);
             yield return new WaitForSeconds(0.5f);
@@ -67,10 +63,8 @@ public class BasicAI : MonoBehaviour {
         }
     }
 
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
+    private void OnCollisionExit2D(Collision2D other) {
+        if (other.gameObject.tag == "Player") {
             inrange = false;
         }
     }
