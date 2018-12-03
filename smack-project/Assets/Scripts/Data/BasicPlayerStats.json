@@ -1,0 +1,29 @@
+﻿{
+    "reqs": {
+
+    },
+    "mods": {
+        "MaxHP": {
+            "mod": 0,
+            "add": 100,
+            "isMalus": false
+        },
+        "MaxMP": {
+            "mod": 0,
+            "add": 100,
+            "isMalus": false
+        },
+    },
+    "costs": {
+        "CurrHP": {
+            "cost": -1, /* HP regen */
+            "time": 20,
+            "charges": -1
+        },
+        "CurrMP": {
+            "cost": -1, /* MP regen */
+            "time": 4,
+            "charges": -1
+        }
+    }
+}

@@ -11,6 +11,7 @@ namespace Player
         public Dictionary<StatNames, StatReq> Reqs;
         public Dictionary<StatNames, StatMod> Mods;
         public Dictionary<StatNames, StatCost> Costs;
+        public IStatSource Source;
 
         public StatBundle
             (Dictionary<StatNames, StatReq> reqs,

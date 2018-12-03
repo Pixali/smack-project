@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Player
 {
@@ -8,17 +10,14 @@ namespace Player
     {
         public struct StatReq
         {
-            public StatNames stat;
             public int min, max;
         }
         public struct StatMod
         {
-            public StatNames stat;
             public int mod, add;
             public bool isMalus; // stat = adds * mods - addsMalus * modsMalus
 
-            public StatMod(StatNames stat, int mod = 0, int add = 0, bool isMalus = false) {
-                this.stat = stat;
+            public StatMod (int mod = 0, int add = 0, bool isMalus = false) {
                 this.mod = mod;
                 this.add = add;
                 this.isMalus = isMalus;
@@ -27,12 +26,12 @@ namespace Player
         public struct StatCost
         {
             public StatNames stat;
-            public int cost, time;
+            public int cost, time, tick, charges;
             // effectively a simple stat change (optionally over time or temporary)
-            // cost is applied each tick while time >= 0
-            // set time to -1 to make it a debuff (while active)
-            // set time to 0 to make it an instant effect, like basic damage
-            // time is reduced by 1 every tick
+            // tick increased by 1 each tick
+            // when tick reaches time, reset to 0, subtract 1 from charges, apply cost
+            // set charges to -1 to make the cost apply forever
+            // set time to 0 to make it apply every tick
         }
         public struct StatCap
         {
@@ -79,7 +78,7 @@ namespace Player
                     }
                 }
             }
-            int total = add * mod;
+            int total = add * mod - addMalus * modMalus;
             if (StatCaps.ContainsKey(stat))
             {
                 var cap = StatCaps[stat];
@@ -90,11 +89,13 @@ namespace Player
             if (updateCache) player.StatCache[stat] = total; // epic CPU cycle-saving memes
             return total;
         }
-        public static bool CheckReq(PlayerStats player, StatReq req) {
-            int total = CalcStat(player, req.stat);
+        public static bool CheckReq(PlayerStats player, StatReq req, StatNames stat) {
+            int total = CalcStat(player, stat);
             return total >= req.min && total <= req.max;
         }
     }
+
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum StatNames : ushort
     {
         MaxHP, CurrHP,

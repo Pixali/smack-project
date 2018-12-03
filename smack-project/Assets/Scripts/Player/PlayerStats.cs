@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using StatMod = Player.StatDictionary.StatMod;
 using StatCost = Player.StatDictionary.StatCost;
 namespace Player
 {
-    public class PlayerStats
+    public class PlayerStats : IStatSource
     {
 
         // XP calculations
@@ -42,7 +45,14 @@ namespace Player
 
         // todo: load defaults from file
         public PlayerStats() {
-            BasicStats = new StatBundle();
+            BasicStats = JsonConvert.DeserializeObject<StatBundle>(
+                File.ReadAllText("Assets/Scripts/Data/BasicPlayerStats.json"));
+            BasicStats.Source = this;
+        }
+
+        public StatBundle GetBundle()
+        {
+            return BasicStats;
         }
     }
 }
