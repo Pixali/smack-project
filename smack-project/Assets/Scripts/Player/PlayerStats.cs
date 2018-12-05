@@ -18,11 +18,11 @@ namespace Player
         // f(n+1) = f(n) + (f(n) - f(n-1)) * 1.5
         // so the XP required to get from 1 to 2 is 10,
         // then every level after takes 50% more xp than the last
-
+        
         public int XP;
         public int Level {
             get {
-                return Mathf.FloorToInt(-Mathf.Log((40 / (3 * (this.XP + 20))) / (Mathf.Log(3) - Mathf.Log(2))));
+                return Mathf.FloorToInt(-Mathf.Log(40 / (3 * (this.XP + 20))) / (Mathf.Log(3) - Mathf.Log(2)));
             }
             set {
                 this.XP = Mathf.FloorToInt(5 * Mathf.Pow(2, (3 - value)) * Mathf.Pow(3, (value - 1)) - 20);
