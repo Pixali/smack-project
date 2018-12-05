@@ -28,19 +28,12 @@ public class BasicAI : MonoBehaviour {
 	void Update () {
         if (!inrange) {
             // search for closest player to fight with
-            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Player");
-            GameObject closest = null;
-            float distance = Mathf.Infinity;
-
-            foreach (GameObject gameObject in gameObjects) {
-                float currDistance = (gameObject.transform.position - transform.position).sqrMagnitude;
-                if (currDistance < distance) {
-                    closest = gameObject;
-                    distance = currDistance;
-                    transform.rotation = Quaternion.LookRotation(Vector3.forward, closest.transform.position - transform.position);
-                    transform.position = Vector2.MoveTowards(transform.position, closest.transform.position, speed * Time.deltaTime);
-                }
+            GameObject target = Utility.findClosestGameObject(gameObject, "Player");
+            if (target != null) {
+                transform.rotation = Quaternion.LookRotation(Vector3.forward, target.transform.position - transform.position);
+                transform.position = Vector2.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
             }
+
         }
     }
 

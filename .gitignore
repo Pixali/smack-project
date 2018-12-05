@@ -39,3 +39,8 @@ sysinfo.txt
 # Crashlytics generated file
 Assets/StreamingAssets/crashlytics-build.properties
 
+# vim
+*.swp
+
+# mac os
+.DS_Store

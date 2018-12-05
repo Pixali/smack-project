@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Projectile
+  - Room
+  - Center
+  - CenterIgnore
   layers:
   - Default
   - TransparentFX
