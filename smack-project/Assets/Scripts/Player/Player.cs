@@ -10,6 +10,10 @@ namespace Player {
         // stats
         private PlayerStats playerStats;
 
+        // weapon
+        private List<Weapon> equipped_weapons;
+        private Weapon current_weapon;
+
         // physics, etc
         private Rigidbody2D rb;
         private GameController gameController;
@@ -72,7 +76,10 @@ namespace Player {
             hpText.text = "hp: " + playerStats.CurrHP + "/" + playerStats.MaxHP;
             manaText.text = "mana: " + playerStats.CurrMP + "/" + playerStats.MaxMP;
 
+            equipped_weapons = new List<Weapon>();
         }
+
+
 
         void FixedUpdate() {
             if (!gameController.paused) {
