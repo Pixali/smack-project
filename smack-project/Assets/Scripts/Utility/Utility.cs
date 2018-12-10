@@ -20,4 +20,9 @@ public static class Utility {
         return closest;
     }
 
+    public static T2 GetOrDefault<T1, T2>(this IDictionary<T1, T2> dict, T1 key, T2 value) {
+        T2 val;
+        return dict.TryGetValue(key, out val) ? val : value;
+    }
+
 }

@@ -5,8 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 
 namespace Player {
-    public class Player : NetworkBehaviour
-    {
+    public class Player : NetworkBehaviour {
         // stats
         private PlayerStats playerStats;
 
@@ -29,8 +28,7 @@ namespace Player {
 
         public void useMana(int amount) {
             playerStats.CurrMP -= amount;
-            if (playerStats.CurrMP <= 0)
-            {
+            if (playerStats.CurrMP <= 0) {
                 playerStats.CurrMP = 0;
                 Debug.Log("You have no mana");
             }
@@ -39,8 +37,7 @@ namespace Player {
 
         public void takeDmg(int dmg) {
             playerStats.CurrHP -= dmg;
-            if (playerStats.CurrHP <= 0)
-            {
+            if (playerStats.CurrHP <= 0) {
                 playerStats.CurrHP = 0;
                 Debug.Log("You have died!");
                 Destroy(gameObject);
@@ -63,8 +60,7 @@ namespace Player {
             hpText = GameObject.Find("UI/Stats/hpText").GetComponent<Text>();
             manaText = GameObject.Find("UI/Stats/manaText").GetComponent<Text>();
 
-            playerStats = new PlayerStats
-            {
+            playerStats = new PlayerStats {
                 MaxHP = 100,
                 MaxMP = 100,
                 Speed = 3.5f

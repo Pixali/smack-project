@@ -7,10 +7,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StatMod = Player.StatDictionary.StatMod;
 using StatCost = Player.StatDictionary.StatCost;
-namespace Player
-{
-    public class PlayerStats : IStatSource
-    {
+namespace Player {
+    public class PlayerStats : IStatSource {
 
         // XP calculations
         // level is based on a recursive function:
@@ -18,7 +16,7 @@ namespace Player
         // f(n+1) = f(n) + (f(n) - f(n-1)) * 1.5
         // so the XP required to get from 1 to 2 is 10,
         // then every level after takes 50% more xp than the last
-        
+
         public int XP;
         public int Level {
             get {
@@ -35,23 +33,49 @@ namespace Player
             }
         }
 
-        public int MaxHP, CurrHP, MaxMP, CurrMP, MaxSP, CurrSP;
+        // we using stats now bois
+        public float MaxHP {
+            get { return StatDictionary.GetOrCalcStat(this, StatNames.MaxHP); }
+            set { BasicStats.Mods[StatNames.MaxHP] = new StatMod(0, value); }
+        }
+        public float CurrHP {
+            get { return StatDictionary.GetOrCalcStat(this, StatNames.CurrHP) - CostTotals.GetOrDefault(StatNames.CurrHP, 0); }
+            set { CostTotals[StatNames.CurrHP] = value - StatDictionary.GetOrCalcStat(this, StatNames.CurrHP); }
+        }
+        public float MaxMP {
+            get { return StatDictionary.GetOrCalcStat(this, StatNames.MaxMP); }
+            set { BasicStats.Mods[StatNames.MaxMP] = new StatMod(0, value); }
+        }
+        public float CurrMP {
+            get { return StatDictionary.GetOrCalcStat(this, StatNames.CurrMP) - CostTotals.GetOrDefault(StatNames.CurrMP, 0); }
+            set { CostTotals[StatNames.CurrMP] = value - StatDictionary.GetOrCalcStat(this, StatNames.CurrMP); }
+        }
+        public float MaxSP {
+            get { return StatDictionary.GetOrCalcStat(this, StatNames.MaxSP); }
+            set { BasicStats.Mods[StatNames.MaxSP] = new StatMod(0, value); }
+        }
+        public float CurrSP {
+            get { return StatDictionary.GetOrCalcStat(this, StatNames.CurrSP); }
+            set { BasicStats.Mods[StatNames.CurrSP] = new StatMod(0, value); }
+        }
 
         public StatBundle BasicStats;
 
         public float Speed;
         public List<StatBundle> statBundles; // skills, equipment, etc.
-        public Dictionary<StatNames, int> StatCache;
+        public List<StatCost> activeCosts;
+        public Dictionary<StatNames, float> CostTotals; // reset on ex. death
+        public Dictionary<StatNames, float> StatCache;
 
         // todo: load defaults from file
         public PlayerStats() {
             BasicStats = JsonConvert.DeserializeObject<StatBundle>(
                 File.ReadAllText("Assets/Scripts/Data/BasicPlayerStats.json"));
             BasicStats.Source = this;
+
         }
 
-        public StatBundle GetBundle()
-        {
+        public StatBundle GetBundle() {
             return BasicStats;
         }
     }

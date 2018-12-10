@@ -4,10 +4,8 @@ using StatReq = Player.StatDictionary.StatReq;
 using StatMod = Player.StatDictionary.StatMod;
 using StatCost = Player.StatDictionary.StatCost;
 
-namespace Player
-{
-    public class StatBundle
-    {
+namespace Player {
+    public class StatBundle {
         public Dictionary<StatNames, StatReq> Reqs;
         public Dictionary<StatNames, StatMod> Mods;
         public Dictionary<StatNames, StatCost> Costs;

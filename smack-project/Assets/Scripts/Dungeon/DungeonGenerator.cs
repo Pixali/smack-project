@@ -5,7 +5,7 @@ using UnityEngine;
 public class DungeonGenerator : MonoBehaviour {
 
     public int roomCount;
-    
+
     public int maxRoomSize;
     public int minRoomSize;
 
@@ -17,43 +17,43 @@ public class DungeonGenerator : MonoBehaviour {
     private List<List<string>> blocks = new List<List<string>>();
 
     void Start() {
-        
+
         // generate a grid of rooms positions
-        for(int x = 0; x < Mathf.CeilToInt(Mathf.Sqrt(roomCount)); x++) {
-            for(int y = 0; y < Mathf.CeilToInt(Mathf.Sqrt(roomCount)); y++) {
+        for (int x = 0; x < Mathf.CeilToInt(Mathf.Sqrt(roomCount)); x++) {
+            for (int y = 0; y < Mathf.CeilToInt(Mathf.Sqrt(roomCount)); y++) {
                 roomCoords.Add(new Vector2(x, y));
             }
         }
 
         // choose a random spot for the rooms on that grid (allows the rooms too be relatively close together)
-        for(int i = 0; i < roomCount; i++) {
+        for (int i = 0; i < roomCount; i++) {
             Vector2 roomPos = roomCoords[Random.Range(0, roomCoords.Count)];
             roomCoords.Remove(roomPos);
             rooms.Add(generateRoom(i, (int)roomPos.x * maxRoomSize, (int)roomPos.y * maxRoomSize));
         }
-        for(int i = 0; i < roomCount; i++) {
+        for (int i = 0; i < roomCount; i++) {
             generateCorridor(rooms[i], i);
         }
         // now generate corridors to connect "blocks" of rooms (ensure all rooms interconnect)
-        for(int i = 1; i < blocks.Count; i++) {
-                generateCorridor(GameObject.Find(blocks[i][Random.Range(0, blocks[i].Count)]+"/Center"), GameObject.Find(blocks[i-1][Random.Range(0, blocks[i-1].Count)]+"/Center"), i);
+        for (int i = 1; i < blocks.Count; i++) {
+            generateCorridor(GameObject.Find(blocks[i][Random.Range(0, blocks[i].Count)] + "/Center"), GameObject.Find(blocks[i - 1][Random.Range(0, blocks[i - 1].Count)] + "/Center"), i);
         }
-            
-    }
-    
-    GameObject generateRoom(int id, int startingX, int startingY) {
-        
-        int width = Random.Range(minRoomSize, maxRoomSize+1);
-        int height = Random.Range(minRoomSize, maxRoomSize+1);
 
-        GameObject room = new GameObject("Room"+id);
+    }
+
+    GameObject generateRoom(int id, int startingX, int startingY) {
+
+        int width = Random.Range(minRoomSize, maxRoomSize + 1);
+        int height = Random.Range(minRoomSize, maxRoomSize + 1);
+
+        GameObject room = new GameObject("Room" + id);
         room.tag = "Room";
 
-        for(int x = 0; x < width; x++) {
+        for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                GameObject tile = Instantiate(floorTile, new Vector2(startingX+x, startingY+y), Quaternion.identity);
+                GameObject tile = Instantiate(floorTile, new Vector2(startingX + x, startingY + y), Quaternion.identity);
                 tile.transform.parent = room.transform;
-                if (x == Mathf.FloorToInt(width/2) && y == Mathf.FloorToInt(height/2)) {
+                if (x == Mathf.FloorToInt(width / 2) && y == Mathf.FloorToInt(height / 2)) {
                     tile.name = "Center";
                     tile.tag = "Center";
                 }
@@ -89,23 +89,23 @@ public class DungeonGenerator : MonoBehaviour {
         int xIntersect = (d * k1 - b * k2) / (a * d - b * c);
         int yIntersect = (-c * k1 + a * k2) / (a * d - b * c);
 
-        GameObject corridor = new GameObject("Corridor"+id);
+        GameObject corridor = new GameObject("Corridor" + id);
 
         // generate corridors
         int mod = xIntersect > (int)startingCenterTile.transform.position.x ? 1 : -1;
-        for(int x = (int)startingCenterTile.transform.position.x; mod == 1 ? (x < xIntersect+1) : (x > xIntersect-1); x+=1*mod) {
+        for (int x = (int)startingCenterTile.transform.position.x; mod == 1 ? (x < xIntersect + 1) : (x > xIntersect - 1); x += 1 * mod) {
             GameObject tile = Instantiate(floorTile, new Vector2(x, startingCenterTile.transform.position.y), Quaternion.identity);
             tile.transform.parent = corridor.transform;
         }
         mod = yIntersect > (int)closestCenterTile.transform.position.y ? 1 : -1;
-        for(int y = (int)closestCenterTile.transform.position.y; mod == 1 ? (y < yIntersect+1) : (y > yIntersect-1); y+=1*mod) {
+        for (int y = (int)closestCenterTile.transform.position.y; mod == 1 ? (y < yIntersect + 1) : (y > yIntersect - 1); y += 1 * mod) {
             GameObject tile = Instantiate(floorTile, new Vector2(closestCenterTile.transform.position.x, y), Quaternion.identity);
             tile.transform.parent = corridor.transform;
         }
 
         startingCenterTile.tag = "Center";
 
-        return corridor; 
+        return corridor;
     }
 
     // find closest room and generate a corridor in that direction
@@ -116,30 +116,30 @@ public class DungeonGenerator : MonoBehaviour {
         GameObject endingRoom = closestCenterTile.transform.parent.gameObject;
         // update blocks (used later to ensure all rooms interconnect)
         bool match = false;
-        foreach(List<string> block in blocks) {
-           if (block.Contains(startingRoom.name)) {
-                if(!block.Contains(endingRoom.name)) {
+        foreach (List<string> block in blocks) {
+            if (block.Contains(startingRoom.name)) {
+                if (!block.Contains(endingRoom.name)) {
                     block.Add(endingRoom.name);
-                    }
+                }
                 match = true;
                 break;
-           } 
-           if (block.Contains(endingRoom.name)) {
-                if(!block.Contains(startingRoom.name)) {
+            }
+            if (block.Contains(endingRoom.name)) {
+                if (!block.Contains(startingRoom.name)) {
                     block.Add(startingRoom.name);
                 }
                 match = true;
                 break;
-           }
+            }
         }
 
         if (!match) {
-            blocks.Add(new List<string>{startingRoom.name, endingRoom.name});
+            blocks.Add(new List<string> { startingRoom.name, endingRoom.name });
         }
 
-        return generateCorridor(startingCenterTile, closestCenterTile, id); 
+        return generateCorridor(startingCenterTile, closestCenterTile, id);
     }
 
-    
+
 
 }

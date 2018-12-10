@@ -1,8 +1,6 @@
 ﻿using System;
-namespace Player
-{
-    public interface IStatSource
-    {
+namespace Player {
+    public interface IStatSource {
         StatBundle GetBundle();
     }
 }
