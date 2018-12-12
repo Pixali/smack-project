@@ -3,26 +3,24 @@
 
     },
     "mods": {
-        "MaxHP": {
-            "mod": 0,
-            "add": 100,
-            "isMalus": false
-        },
-        "MaxMP": {
-            "mod": 0,
-            "add": 100,
-            "isMalus": false
-        },
+        "MaxHP":        { "mod": 0, "add": 100  },
+        "CurrHP":       { "mod": 0, "add": 100  },
+        "MaxMP":        { "mod": 0, "add": 100  },
+        "CurrMP":       { "mod": 0, "add": 100  },
+        "MoveSpeed":    { "mod": 0, "add": 3.5  },
+        "Vitality":     { "mod": 0, "add": 5    },
+        "Cunning":      { "mod": 0, "add": 5    },
+        "Wisdom":       { "mod": 0, "add": 5    },
     },
     "costs": {
         "CurrHP": {
             "cost": -1, /* HP regen */
-            "time": 20,
+            "time": 20.0,
             "charges": -1
         },
         "CurrMP": {
             "cost": -1, /* MP regen */
-            "time": 4,
+            "time": 4.0,
             "charges": -1
         }
     }

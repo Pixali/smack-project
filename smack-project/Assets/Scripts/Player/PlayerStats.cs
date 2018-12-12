@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StatMod = Player.StatDictionary.StatMod;
 using StatCost = Player.StatDictionary.StatCost;
+using System;
+
 namespace Player {
     public class PlayerStats : IStatSource {
 
@@ -55,24 +57,31 @@ namespace Player {
             set { BasicStats.Mods[StatNames.MaxSP] = new StatMod(0, value); }
         }
         public float CurrSP {
-            get { return StatDictionary.GetOrCalcStat(this, StatNames.CurrSP); }
-            set { BasicStats.Mods[StatNames.CurrSP] = new StatMod(0, value); }
+            get { return StatDictionary.GetOrCalcStat(this, StatNames.CurrSP) - CostTotals.GetOrDefault(StatNames.CurrSP, 0); }
+            set { CostTotals[StatNames.CurrSP] = value - StatDictionary.GetOrCalcStat(this, StatNames.CurrSP); }
+        }
+
+        public float Speed {
+            get { return StatDictionary.GetOrCalcStat(this, StatNames.MoveSpeed); }
+            set { BasicStats.Mods[StatNames.MoveSpeed] = new StatMod(0, value); }
         }
 
         public StatBundle BasicStats;
 
-        public float Speed;
+
         public List<StatBundle> statBundles; // skills, equipment, etc.
         public List<StatCost> activeCosts;
         public Dictionary<StatNames, float> CostTotals; // reset on ex. death
         public Dictionary<StatNames, float> StatCache;
 
-        // todo: load defaults from file
         public PlayerStats() {
             BasicStats = JsonConvert.DeserializeObject<StatBundle>(
                 File.ReadAllText("Assets/Scripts/Data/BasicPlayerStats.json"));
             BasicStats.Source = this;
-
+            statBundles = new List<StatBundle> { BasicStats };
+            activeCosts = new List<StatCost>();
+            CostTotals = new Dictionary<StatNames, float>();
+            StatCache = new Dictionary<StatNames, float>();
         }
 
         public StatBundle GetBundle() {

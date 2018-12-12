@@ -25,11 +25,11 @@ namespace Player {
 
         public StatBundle bundle;
 
-        public WeaponStats() {
-            bundle = new StatBundle {
-                Source = this
-            };
+        public WeaponStats(StatBundle bundle) {
+            this.bundle = bundle ?? new StatBundle();
+            this.bundle.Source = this;
         }
+        public WeaponStats() : this(null) { }
 
         public StatBundle GetBundle() {
             return bundle;

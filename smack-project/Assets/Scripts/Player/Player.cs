@@ -26,28 +26,30 @@ namespace Player {
             GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Player/myplayer");
         }
 
-        public void useMana(int amount) {
-            playerStats.CurrMP -= amount;
-            if (playerStats.CurrMP <= 0) {
-                playerStats.CurrMP = 0;
-                Debug.Log("You have no mana");
-            }
-            manaText.text = "mana: " + playerStats.CurrMP + "/" + playerStats.MaxMP;
+        public bool useMana(int amount) {
+            // todo: check remaining mana before casting in here.
+            // it'd be silly to allow players to fling meteors around with 1MP.
+            if (playerStats.CurrMP < amount) return false;
+            StatDictionary.ApplyChange(playerStats, StatNames.CurrMP, amount);
+            //manaText.text = "mana: " + playerStats.CurrMP + "/" + playerStats.MaxMP;
+            return true;
+            //playerStats.CurrMP -= amount;
+            //if (playerStats.CurrMP <= 0) {
+            //    playerStats.CurrMP = 0;
+            //    Debug.Log("You have no mana");
+            //}
+
         }
 
         public void takeDmg(int dmg) {
-            playerStats.CurrHP -= dmg;
-            if (playerStats.CurrHP <= 0) {
-                playerStats.CurrHP = 0;
-                Debug.Log("You have died!");
-                Destroy(gameObject);
-            }
-            hpText.text = "hp: " + playerStats.CurrHP + "/" + playerStats.MaxHP;
+            StatDictionary.ApplyChange(playerStats, StatNames.CurrHP, dmg);
+            //playerStats.CurrHP -= dmg;
+
+            //hpText.text = "hp: " + playerStats.CurrHP + "/" + playerStats.MaxHP;
         }
 
         private void shoot() {
-            if (playerStats.CurrMP >= 10) {
-                useMana(10);
+            if (useMana(10)) {
                 Instantiate(Resources.Load<GameObject>("Prefabs/Projectiles/projectile"), transform.position, transform.rotation);
             }
         }
@@ -60,19 +62,32 @@ namespace Player {
             hpText = GameObject.Find("UI/Stats/hpText").GetComponent<Text>();
             manaText = GameObject.Find("UI/Stats/manaText").GetComponent<Text>();
 
-            playerStats = new PlayerStats {
-                MaxHP = 100,
-                MaxMP = 100,
-                Speed = 3.5f
-            };
+            playerStats = new PlayerStats();
 
-            playerStats.CurrHP = playerStats.MaxHP;
-            playerStats.CurrMP = playerStats.MaxMP;
+            //playerStats.CurrHP = playerStats.MaxHP;
+            //playerStats.CurrMP = playerStats.MaxMP;
 
             hpText.text = "hp: " + playerStats.CurrHP + "/" + playerStats.MaxHP;
             manaText.text = "mana: " + playerStats.CurrMP + "/" + playerStats.MaxMP;
 
             equipped_weapons = new List<Weapon>();
+
+            StatDictionary.AddStatListener(StatNames.CurrHP, p => {
+                if (p == playerStats) {
+                    hpText.text = "hp: " + p.CurrHP + "/" + p.MaxHP;
+                    if (p.CurrHP <= 0) {
+                        //playerStats.CurrHP = 0;
+                        Debug.Log("You have died!");
+                        Destroy(gameObject);
+                        // todo: respawning. don't forget to clear out playerStats.CostTotals!
+                    }
+                }
+            });
+            StatDictionary.AddStatListener(StatNames.CurrMP, p => {
+                if (p == playerStats) {
+                    manaText.text = "mana: " + playerStats.CurrMP + "/" + playerStats.MaxMP;
+                }
+            });
         }
 
 
@@ -87,15 +102,17 @@ namespace Player {
 
                 float horiz = Input.GetAxisRaw("Horizontal");
                 float verti = Input.GetAxisRaw("Vertical");
-
                 rb.velocity = new Vector2(horiz, verti).normalized * playerStats.Speed;
             }
 
         }
+        void Update() {
+            StatDictionary.StatTick(this.playerStats, Time.deltaTime);
+        }
 
         void OnTriggerEnter2D(Collider2D other) {
             if (!gameController.paused) {
-                Debug.Log("collided with " + other.gameObject);
+                //Debug.Log("collided with " + other.gameObject);
             }
         }
     }
