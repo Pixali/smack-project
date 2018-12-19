@@ -123,7 +123,6 @@ namespace Player {
                         var max = cap.maxFunc != null ? cap.maxFunc(player) : cap.max;
                         float j = player.CostTotals.GetOrDefault(cost.stat, 0) + cost.cost;
                         j = pval - j > max ? pval - max : (pval - j < min ? pval - min : j);
-                        Debug.Log("stat: " + cost.stat +  " j: " + j);
                         player.CostTotals[cost.stat] = j;
                     }
                     else if (player.CostTotals.ContainsKey(cost.stat))

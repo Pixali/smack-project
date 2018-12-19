@@ -9,9 +9,10 @@ public class CameraController : MonoBehaviour {
     private Player.Player player;
     private Transform playerPos;
     private GameObject playerObj;
-    private PlayerStats playerStats;
+    //private PlayerStats playerStats;
     private static float maxLen;
     private static float driftLen = 15f;
+    private Vector3 driftPos = Vector3.zero;
 
     static CameraController() {
         var smallerLen = Screen.width > Screen.height ? Screen.height : Screen.width;
@@ -25,28 +26,17 @@ public class CameraController : MonoBehaviour {
             if (playerObj != null) {
                 playerPos = playerObj.transform;
                 player = playerObj.GetComponent<Player.Player>();
-                playerStats = player.playerStats;
-                speed = StatDictionary.GetOrCalcStat(playerStats, StatNames.MoveSpeed) * 1.2f;
             }
         }
         else {
 
             var xyz = Input.mousePosition - new Vector3(Screen.width / 2f, Screen.height / 2f);
             var xyzScreenSpace = new Vector3(xyz.x / Screen.width / 2, xyz.y / Screen.height / 2);
-            if (xyz.sqrMagnitude > maxLen) {
-                transform.position = Vector3.Lerp(
-                    transform.position,
-                    new Vector3(playerPos.position.x, playerPos.position.y, -10) + xyzScreenSpace * driftLen,
-                    speed * Time.deltaTime);
-            }
-            else {
-                transform.position = Vector3.Lerp(
-                    transform.position,
-                    new Vector3(playerPos.position.x, playerPos.position.y, -10),
-                    speed * Time.deltaTime);
-            }
-            //transform.position = new Vector3(playerPos.position.x, playerPos.position.y, -10); 
-            //transform.position = Vector3.Lerp(transform.position, new Vector3(playerPos.position.x, playerPos.position.y, -10), speed * Time.deltaTime);
+            driftPos = xyz.sqrMagnitude > maxLen
+                ? Vector3.Lerp(driftPos, xyzScreenSpace * driftLen, speed * Time.deltaTime)
+                : Vector3.Lerp(driftPos, Vector3.zero, speed * Time.deltaTime);
+            driftPos.z = -10;
+            transform.position = playerPos.position + driftPos;
         }
     }
 }
