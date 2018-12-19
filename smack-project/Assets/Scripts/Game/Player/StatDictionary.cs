@@ -59,7 +59,7 @@ namespace Player {
             {StatNames.CurrMP, new StatCap(0, float.PositiveInfinity, null,
                 p => GetOrCalcStat(p, StatNames.MaxMP) - GetOrCalcStat(p, StatNames.ReserveMP))},
             {StatNames.CurrSP, new StatCap(0, float.PositiveInfinity, null, p => GetOrCalcStat(p, StatNames.MaxSP))},
-            {StatNames.MoveSpeed, new StatCap(0, 190)} // set lower cap to 0 from 50 - 50 way too high (also maybe allow 0 for stuns?)
+            {StatNames.MoveSpeed, new StatCap(0, 10)} // default speed is 3.5 (units/sec)
         };
 
         private static Dictionary<StatNames, Action<PlayerStats>> OnStatChange = new Dictionary<StatNames, Action<PlayerStats>>();
@@ -123,6 +123,7 @@ namespace Player {
                         var max = cap.maxFunc != null ? cap.maxFunc(player) : cap.max;
                         float j = player.CostTotals.GetOrDefault(cost.stat, 0) + cost.cost;
                         j = pval - j > max ? pval - max : (pval - j < min ? pval - min : j);
+                        Debug.Log("stat: " + cost.stat +  " j: " + j);
                         player.CostTotals[cost.stat] = j;
                     }
                     else if (player.CostTotals.ContainsKey(cost.stat))
@@ -164,12 +165,19 @@ namespace Player {
         PhysStatusRes,
         MagStatusRes,
         PoisonDef, PoisonRes,
-        MoveSpeed, AttackSpeed,
+        MoveSpeed, AttackSpeed, DashLength,
         ItemUseTime,
         SkillUseTime,
 
         PhysAttackDmg, MagAttackDmg,
         CQAttackRange, ProjAttackRange,
+
+        LightCQDmg, LightCQRange, LightCQAngle,
+        HeavyCQDmg, HeavyCQRange, HeavyCQAngle,
+        LightProjDmg, LightProjRange, LightProjSize,
+        HeavyProjDmg, HeavyProjRange, HeavyProjSize,
+        LightMaxRicoche, HeavyMaxRicoche,
+        LightHoming, HeavyHoming,
 
     }
 }

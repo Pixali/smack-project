@@ -1,8 +1,8 @@
 ﻿{
-    "reqs": {
+    "Reqs": {
 
     },
-    "mods": {
+    "Mods": {
         "MaxHP":        { "mod": 0, "add": 100  },
         "CurrHP":       { "mod": 0, "add": 100  },
         "MaxMP":        { "mod": 0, "add": 100  },
@@ -12,15 +12,17 @@
         "Cunning":      { "mod": 0, "add": 5    },
         "Wisdom":       { "mod": 0, "add": 5    }
     },
-    "costs": {
+    "Costs": {
         "CurrHP": {
-            "cost": -1, /* HP regen */
-            "time": 20.0,
+            "stat": "CurrHP",
+            "cost": -1,
+            "time": 2.0,
             "charges": -1
         },
         "CurrMP": {
-            "cost": -1, /* MP regen */
-            "time": 4.0,
+            "stat": "CurrMP",
+            "cost": -1,
+            "time": 0.5,
             "charges": -1
         }
     }

@@ -82,6 +82,10 @@ namespace Player {
             activeCosts = new List<StatCost>();
             CostTotals = new Dictionary<StatNames, float>();
             StatCache = new Dictionary<StatNames, float>();
+
+            foreach (var cost in BasicStats.Costs) {
+                StatDictionary.ApplyChange(this, cost.Value);
+            }
         }
 
         public StatBundle GetBundle() {

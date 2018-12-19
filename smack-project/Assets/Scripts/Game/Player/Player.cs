@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Player {
     public class Player : NetworkBehaviour {
         // stats
-        private PlayerStats playerStats;
+        public PlayerStats playerStats;
 
         // weapon
         private List<Weapon> equipped_weapons;
@@ -23,8 +23,6 @@ namespace Player {
 
 
         public bool useMana(int amount) {
-            // todo: check remaining mana before casting in here.
-            // it'd be silly to allow players to fling meteors around with 1MP.
             if (playerStats.CurrMP < amount) return false;
             StatDictionary.ApplyChange(playerStats, StatNames.CurrMP, amount);
             return true;
